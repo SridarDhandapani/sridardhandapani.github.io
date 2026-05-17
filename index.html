@@ -6,6 +6,12 @@
   <title>Sridar Dhandapani — CTO, Hoxton AI</title>
   <meta name="description" content="Sridar Dhandapani — CTO at Hoxton AI, building computer vision and AI for physical spaces. Previously eight years in Formula 1 with McLaren Racing." />
   <meta name="theme-color" content="#f3eee3" />
+  <script>
+    try {
+      var t = localStorage.getItem('theme');
+      if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+    } catch (e) {}
+  </script>
   <meta property="og:title" content="Sridar Dhandapani — CTO, Hoxton AI" />
   <meta property="og:description" content="CTO at Hoxton AI. Previously eight years in Formula 1 with McLaren Racing." />
   <meta property="og:url" content="https://sridar.dev" />
@@ -22,9 +28,39 @@
       --muted: #6f6658;
       --hair: rgba(26, 22, 18, 0.18);
       --accent: #a8442a;
+      --grain-blend: multiply;
+      --grain-opacity: 0.14;
+      --grain-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.09 0 0 0 0 0.07 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       --serif: 'Newsreader', 'Iowan Old Style', Georgia, serif;
       --display: 'Instrument Serif', 'Newsreader', Georgia, serif;
       --mono: 'JetBrains Mono', 'SFMono-Regular', ui-monospace, Menlo, monospace;
+      color-scheme: light;
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #15110d;
+      --ink: #ede5d4;
+      --muted: #8d8478;
+      --hair: rgba(237, 229, 212, 0.18);
+      --accent: #d97a5e;
+      --grain-blend: screen;
+      --grain-opacity: 0.09;
+      --grain-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.93 0 0 0 0 0.9 0 0 0 0 0.83 0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      color-scheme: dark;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #15110d;
+        --ink: #ede5d4;
+        --muted: #8d8478;
+        --hair: rgba(237, 229, 212, 0.18);
+        --accent: #d97a5e;
+        --grain-blend: screen;
+        --grain-opacity: 0.09;
+        --grain-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.93 0 0 0 0 0.9 0 0 0 0 0.83 0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        color-scheme: dark;
+      }
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -40,17 +76,22 @@
       min-height: 100vh;
       position: relative;
       overflow-x: hidden;
+      transition: background-color 320ms ease, color 320ms ease;
     }
 
     body::before {
       content: '';
       position: fixed;
       inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.09 0 0 0 0 0.07 0 0 0 0.6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      opacity: 0.14;
+      background-image: var(--grain-img);
+      opacity: var(--grain-opacity);
       pointer-events: none;
       z-index: 1;
-      mix-blend-mode: multiply;
+      mix-blend-mode: var(--grain-blend);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body { transition: none; }
     }
 
     .page {
@@ -75,7 +116,37 @@
     }
     .masthead .lhs { display: flex; gap: 22px; flex-wrap: wrap; }
     .masthead .star { color: var(--accent); }
-    .masthead .rhs { color: var(--muted); }
+    .masthead .rhs {
+      display: flex;
+      align-items: baseline;
+      gap: 22px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .masthead .edition { color: var(--muted); }
+
+    .theme-toggle {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .theme-toggle button {
+      background: none;
+      border: 0;
+      padding: 0;
+      margin: 0;
+      font: inherit;
+      letter-spacing: inherit;
+      text-transform: inherit;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color 200ms ease;
+    }
+    .theme-toggle button:hover,
+    .theme-toggle button:focus-visible { color: var(--ink); }
+    .theme-toggle button:focus-visible { outline: 1px dashed var(--accent); outline-offset: 3px; }
+    .theme-toggle button[aria-pressed="true"] { color: var(--accent); }
+    .theme-toggle .sep { color: var(--muted); opacity: 0.45; user-select: none; }
 
     /* ─── hero ─────────────────────────────────────── */
     .hero {
@@ -313,8 +384,10 @@
     /* ─── mobile ───────────────────────────────────── */
     @media (max-width: 760px) {
       .page { padding: 22px 22px 50px; }
-      .masthead { font-size: 10px; gap: 12px; }
+      .masthead { font-size: 10px; gap: 12px; flex-wrap: wrap; row-gap: 10px; }
       .masthead .lhs { gap: 14px; }
+      .masthead .rhs { gap: 14px; width: 100%; justify-content: flex-start; }
+      .theme-toggle { gap: 6px; margin-left: auto; }
       .hero { grid-template-columns: 1fr; padding: 64px 0 24px; gap: 30px; }
       .hero aside { text-align: left; }
       .hero aside .num { font-size: 44px; }
@@ -337,7 +410,16 @@
         <span class="star">✦</span>
         <span>London, UK</span>
       </div>
-      <div class="rhs">sridar.dev — Edition 01 · MMXXVI</div>
+      <div class="rhs">
+        <span class="edition">sridar.dev — Edition 01 · MMXXVI</span>
+        <span class="theme-toggle" role="group" aria-label="Theme">
+          <button type="button" data-set="auto">Auto</button>
+          <span class="sep" aria-hidden="true">·</span>
+          <button type="button" data-set="light">Light</button>
+          <span class="sep" aria-hidden="true">·</span>
+          <button type="button" data-set="dark">Dark</button>
+        </span>
+      </div>
     </header>
 
     <section class="hero reveal d2" style="border-top:0; padding-top:120px;">
@@ -414,5 +496,41 @@
     </footer>
 
   </main>
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var meta = document.querySelector('meta[name="theme-color"]');
+      var btns = document.querySelectorAll('.theme-toggle button[data-set]');
+      var mql = window.matchMedia('(prefers-color-scheme: dark)');
+
+      function effective() {
+        var t = root.dataset.theme;
+        if (t === 'light' || t === 'dark') return t;
+        return mql.matches ? 'dark' : 'light';
+      }
+      function paint() {
+        var saved = root.dataset.theme || 'auto';
+        btns.forEach(function (b) {
+          b.setAttribute('aria-pressed', String(b.dataset.set === saved));
+        });
+        if (meta) meta.content = effective() === 'dark' ? '#15110d' : '#f3eee3';
+      }
+      btns.forEach(function (b) {
+        b.addEventListener('click', function () {
+          var v = b.dataset.set;
+          if (v === 'auto') {
+            delete root.dataset.theme;
+            try { localStorage.removeItem('theme'); } catch (e) {}
+          } else {
+            root.dataset.theme = v;
+            try { localStorage.setItem('theme', v); } catch (e) {}
+          }
+          paint();
+        });
+      });
+      mql.addEventListener ? mql.addEventListener('change', paint) : mql.addListener(paint);
+      paint();
+    })();
+  </script>
 </body>
 </html>
